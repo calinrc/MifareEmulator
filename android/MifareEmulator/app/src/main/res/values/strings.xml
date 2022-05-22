@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MifareEmulator</string>
+    <string name="dialog_nfc_not_enabled_title">NFC not enabled</string>
+    <string name="action_exit_app">Exit App</string>
+    <string name="dialog_nfc_not_enabled">The NFC adapter is not enabled.
+        Please go to your Settings and enable it.</string>
+    <string name="action_nfc">Go to NFC Settings</string>
+
+</resources>
