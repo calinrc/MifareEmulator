@@ -153,7 +153,7 @@ class MifareEmulatorApp : Application() {
                             )
                         )
                     )
-                } catch (ex: IllegalStateException) {
+                } catch (ex: Exception) {
                     Log.d(
                         LOG_TAG,
                         "Error: Could not enable the NFC foreground" +
