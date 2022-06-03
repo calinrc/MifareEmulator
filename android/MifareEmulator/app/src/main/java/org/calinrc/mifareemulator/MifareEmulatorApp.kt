@@ -22,7 +22,8 @@ import java.util.*
 class MifareEmulatorApp : Application() {
     companion object {
         private val LOG_TAG: String = MifareEmulatorApp::class.java.simpleName
-//        val HOME_DIR = "/MifareEmulator"
+
+        //        val HOME_DIR = "/MifareEmulator"
 //        val TMP_DIR = "tmp"
 //        val KEYS_DIR = "key-files"
 //        val DUMPS_DIR = "dump-files"
@@ -318,10 +319,10 @@ class MifareEmulatorApp : Application() {
          * @return String representation of the decimal value of hexString.
          */
         fun hex2Dec(hex: String): String? {
-            if (!( hex.length % 2 == 0 && hex.matches(Regex("[0-9A-Fa-f]+")))) {
+            if (!(hex.length % 2 == 0 && hex.matches(Regex("[0-9A-Fa-f]+")))) {
                 return null
             }
-            val ret = if ( hex.isEmpty()) {
+            val ret = if (hex.isEmpty()) {
                 "0"
             } else if (hex.length <= 14) {
                 java.lang.Long.toString(hex.toLong(16))
@@ -374,13 +375,44 @@ class MifareEmulatorApp : Application() {
             WriteKeyA, WriteKeyB, WriteAC
         }
 
+        /**
+         * Create a connected [MCReader] if there is a present MIFARE Classic
+         * tag. If there is no MIFARE Classic tag an error
+         * message will be displayed to the user.
+         * @param context The Context in which the error Toast will be shown.
+         * @return A connected [MCReader] or "null" if no tag was present.
+         */
+        fun checkForTagAndCreateReader(context: Context?): MCReader? {
+            var tagLost = false
+            // Check for tag.
+            val reader = MCReader[mTag]
+            if (reader != null) {
+
+                try {
+                    reader.connect()
+                } catch (e: Exception) {
+                    tagLost = true
+                }
+                if (!tagLost && !reader.isConnected()) {
+                    reader.close()
+                    tagLost = true
+                }
+                if (!tagLost) {
+                    return reader
+                }
+            }
+
+            // Error. The tag is gone.
+            Toast.makeText(context, R.string.info_no_tag_found, Toast.LENGTH_LONG).show()
+            return null
+        }
     }
 
-    /**
-     * Possible operations the on a MIFARE Classic Tag.
-     */
-    override fun onCreate() {
-        super.onCreate()
-        mAppContext = applicationContext
+        /**
+         * Possible operations the on a MIFARE Classic Tag.
+         */
+        override fun onCreate() {
+            super.onCreate()
+            mAppContext = applicationContext
+        }
     }
-}

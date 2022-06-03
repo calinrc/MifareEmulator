@@ -6,5 +6,6 @@
         Please go to your Settings and enable it.</string>
     <string name="action_nfc">Go to NFC Settings</string>
     <string name="info_new_tag_found">New tag found</string>
+    <string name="info_no_tag_found">Error: There is no MIFARE Classic tag</string>
 
 </resources>
