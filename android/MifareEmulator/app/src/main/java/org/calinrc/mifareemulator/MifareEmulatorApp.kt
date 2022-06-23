@@ -13,7 +13,6 @@ import android.nfc.tech.NfcA
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.preference.PreferenceManager
 import java.io.File
 import java.math.BigInteger
@@ -346,6 +345,34 @@ class MifareEmulatorApp : Application() {
                 }
             }
             return ret.toString()
+        }
+
+        /**
+         * Convert a string of hex data into a byte array.
+         * Original author is: Dave L. (http://stackoverflow.com/a/140861).
+         * @param hex The hex string to convert
+         * @return An array of bytes with the values of the string.
+         */
+        fun hex2Bytes(hex: String?): ByteArray? {
+            if (!(hex != null && hex.length % 2 == 0 && hex.matches(Regex("[0-9A-Fa-f]+")))) {
+                return null
+            }
+            val len = hex.length
+            val data = ByteArray(len / 2)
+            try {
+                var i = 0
+                while (i < len) {
+                    data[i / 2] = ((hex[i].digitToIntOrNull(16) ?: -1 shl 4)
+                    + hex[i + 1].digitToIntOrNull(16)!! ?: -1).toByte()
+                    i += 2
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d(
+                    LOG_TAG, "Argument(s) for hexStringToByteArray(String s)"
+                            + "was not a hex string"
+                )
+            }
+            return data
         }
 
         fun treatAsNewTag(intent: Intent, context: Context): Int {
